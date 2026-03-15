@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { serviceRoutes } from "./features/services/service.route";
 
 const router = Router();
 
@@ -12,5 +13,6 @@ router.get("/health", (_req, res) => {
 });
 
 // Feature routes
+router.use("/services", serviceRoutes);
 
 export { router as apiRoutes };
