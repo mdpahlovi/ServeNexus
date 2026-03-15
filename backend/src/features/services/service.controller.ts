@@ -11,7 +11,7 @@ export class ServiceController {
 
     static getServices = asyncHandler(async (req: Request, res: Response) => {
         const result = await ServiceService.getServices(req.query);
-        ApiResponse.success(res, result, "Services fetched successfully");
+        ApiResponse.paginated(res, result.data, result.meta, "Services fetched successfully");
     });
 
     static getService = asyncHandler(async (req: Request, res: Response) => {

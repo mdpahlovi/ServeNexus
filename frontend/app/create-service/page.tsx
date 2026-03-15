@@ -15,7 +15,7 @@ export default function CreateService() {
                 </Link>
                 <h1 className="text-3xl font-bold tracking-tight">Create Service</h1>
             </div>
-            <ServiceForm data={{ title: "", description: "", price: 0 }} />
+            <ServiceForm />
         </main>
     );
 }
