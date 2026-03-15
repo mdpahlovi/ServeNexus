@@ -11,7 +11,7 @@ export default async function Home() {
             <div className="mb-4 sm:mb-6 flex justify-between items-center">
                 <h1 className="text-3xl font-bold tracking-tight">Services</h1>
                 <Link href="/create-service">
-                    <Button>Add Service</Button>
+                    <Button>Create Service</Button>
                 </Link>
             </div>
             {data?.data?.length === 0 ? (
