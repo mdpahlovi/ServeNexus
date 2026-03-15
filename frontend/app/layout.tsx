@@ -1,3 +1,5 @@
+import { Header } from "@/components/main/header";
+import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
@@ -19,7 +21,11 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en" className={cn("font-sans dark", geist.variable)}>
-            <body>{children}</body>
+            <body>
+                <Header />
+                {children}
+                <Toaster />
+            </body>
         </html>
     );
 }

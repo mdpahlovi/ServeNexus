@@ -24,7 +24,7 @@ export class ServiceService {
 
     static getServices = async (query: z.infer<typeof getServiceSchema>["query"]) => {
         const page = Number(query.page ?? 1);
-        const limit = Number(query.limit ?? 10);
+        const limit = Number(query.limit ?? 6);
         const skip = (page - 1) * limit;
 
         const filter: Record<string, unknown> = {};
