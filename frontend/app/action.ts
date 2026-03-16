@@ -3,7 +3,6 @@
 import { serviceSchema } from "@/schema";
 import { Service } from "@/types";
 import { revalidateTag } from "next/cache";
-import { redirect } from "next/navigation";
 
 const serverUrl = `${process.env.SERVER_URL}/api/v1/services`;
 
@@ -21,9 +20,7 @@ export type ApiResponse<T> = {
     meta?: MetaResponse;
 };
 
-export async function createOrUpdateService(e: React.SubmitEvent<HTMLFormElement>, id?: string) {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
+export async function createOrUpdateService(formData: FormData, id?: string) {
     const data = Object.fromEntries(formData);
 
     const parsedData = serviceSchema.safeParse({
@@ -47,10 +44,6 @@ export async function createOrUpdateService(e: React.SubmitEvent<HTMLFormElement
         body: JSON.stringify(parsedData.data),
     });
 
-    if (response.ok) {
-        redirect("/");
-    }
-
     return await response.json();
 }
 
@@ -66,7 +59,7 @@ export async function getServices(params: { [key: string]: string }): Promise<Ap
 
 export async function getService(id: string): Promise<ApiResponse<Service>> {
     const response = await fetch(`${serverUrl}/${id}`, {
-        next: { tags: ["services"] },
+        next: { tags: ["service", id] },
         method: "GET",
     });
 
