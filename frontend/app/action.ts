@@ -2,7 +2,7 @@
 
 import { serviceSchema } from "@/schema";
 import { Service } from "@/types";
-import { revalidateTag } from "next/cache";
+import { revalidatePath } from "next/cache";
 
 const serverUrl = `${process.env.SERVER_URL}/api/v1/services`;
 
@@ -44,24 +44,22 @@ export async function createOrUpdateService(formData: FormData, id?: string) {
         body: JSON.stringify(parsedData.data),
     });
 
+    if (response.ok) {
+        revalidatePath("/");
+    }
+
     return await response.json();
 }
 
 export async function getServices(params: { [key: string]: string }): Promise<ApiResponse<Service[]>> {
     const query = new URLSearchParams(params).toString();
-    const response = await fetch(`${serverUrl}?${query}`, {
-        next: { tags: ["services"] },
-        method: "GET",
-    });
+    const response = await fetch(`${serverUrl}?${query}`);
 
     return await response.json();
 }
 
 export async function getService(id: string): Promise<ApiResponse<Service>> {
-    const response = await fetch(`${serverUrl}/${id}`, {
-        next: { tags: ["service", id] },
-        method: "GET",
-    });
+    const response = await fetch(`${serverUrl}/${id}`);
 
     return await response.json();
 }
@@ -72,7 +70,7 @@ export async function deleteService(id: string): Promise<ApiResponse<{ deleted: 
     });
 
     if (response.ok) {
-        revalidateTag("services", "fetch");
+        revalidatePath("/");
     }
 
     return await response.json();

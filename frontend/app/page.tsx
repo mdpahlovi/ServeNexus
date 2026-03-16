@@ -1,32 +1,36 @@
-import { getServices } from "@/app/action";
+import { ApiResponse, getServices } from "@/app/action";
 import ServiceDelete from "@/components/main/service-delete";
+import ServicePagination from "@/components/main/service-pagination";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
+import { Service } from "@/types";
 import { Alert01Icon, DropboxIcon, LoaderCircle } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import Link from "next/link";
 import { Suspense } from "react";
 
-export default async function ServicePage() {
+export default async function ServicePage({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
+    const page = (await searchParams).page ?? "1";
+    const data = await getServices({ page, limit: "6" });
+
     return (
-        <main className="container mx-auto p-4 sm:p-6 flex-1 flex flex-col">
-            <div className="mb-4 sm:mb-6 flex justify-between items-center">
+        <main className="container mx-auto p-4 sm:p-6 flex-1 flex flex-col gap-4 sm:gap-6">
+            <div className="flex justify-between items-center">
                 <h1 className="text-3xl font-bold tracking-tight">Services</h1>
                 <Link href="/create-service">
                     <Button>Create Service</Button>
                 </Link>
             </div>
             <Suspense fallback={<EmptyState variant="loading" />}>
-                <ServiceList />
+                <ServiceList data={data} />
             </Suspense>
+            <ServicePagination page={parseInt(page)} limit={data?.meta?.limit} total={data?.meta?.total} />
         </main>
     );
 }
 
-async function ServiceList() {
-    const data = await getServices({});
-
+async function ServiceList({ data }: { data: ApiResponse<Service[]> }) {
     if (!data?.success) {
         return <EmptyState variant="error" />;
     }
